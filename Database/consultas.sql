@@ -23,8 +23,8 @@ BEGIN
 	SET v_proyecto_id = LAST_INSERT_ID();
     
     INSERT IGNORE INTO ProyectoRubro(proyecto_id, rubro_id)
-    SELECT v_proyecto_id, rubro_id
-    FROM JSON_TABLE(r_rubros, '$[*]' COLUMNS(rubro_id INT PATH '$'));
+    SELECT v_proyecto_id, t.rubro_id
+    FROM JSON_TABLE(r_rubros, '$[*]' COLUMNS(rubro_id INT PATH '$')) t;
 
 END //
 DELIMITER ;
@@ -208,7 +208,7 @@ BEGIN
 END //
 DELIMITER ;
 
--- Procedimiento para eliminar un Rubro
+-- Procedimiento para eliminar un Donacion
 DELIMITER //
 CREATE PROCEDURE eliminarDonacion(
     IN d_id INT
@@ -284,15 +284,15 @@ BEGIN
 	SET v_compra_id = LAST_INSERT_ID();
     
     INSERT IGNORE INTO ProyectoRubro(proyecto_id, rubro_id)
-    SELECT v_proyecto_id, rubro_id
-    FROM JSON_TABLE(r_rubros, '$[*]' COLUMNS(rubro_id INT PATH '$'));
+    SELECT v_proyecto_id, t.rubro_id
+    FROM JSON_TABLE(r_rubros, '$[*]' COLUMNS(rubro_id INT PATH '$')) t;
     
     SET v_total_items = JSON_LENGTH(c_compra);
     
     WHILE v_idx < v_total_items DO
         -- Extraer los valores del JSON
         SET v_item_monto = JSON_UNQUOTE(JSON_EXTRACT(c_compra, CONCAT('$[', v_idx, '].monto')));
-        SET v_item_proyectorubro_id = JSON_UNQUOTE(JSON_EXTRACT(detalles, CONCAT('$[', idx, '].proyectorubro_id')));
+        SET v_item_proyectorubro_id = JSON_UNQUOTE(JSON_EXTRACT(detalles, CONCAT('$[', v_idx, '].proyectorubro_id')));
         
         -- Validar que el monto disponible en el rubro no sea menor al monto a descontar
         IF (SELECT monto_disponible FROM ProyectoRubro WHERE id = v_item_proyectorubro_id) >= v_item_monto THEN
@@ -308,7 +308,7 @@ BEGIN
             SIGNAL SQLSTATE '45000' SET MESSAGE_TEXT = 'Error: Fondos insuficientes para revertir la compra';
         END IF;
         
-        SET idx = idx + 1;
+        SET v_idx = v_idx + 1;
     END WHILE;
     
 END //
@@ -340,7 +340,7 @@ DELIMITER ;
 
 -- Procedimiento para eliminar una Compra
 DELIMITER //
-CREATE PROCEDURE eliminarProyecto(
+CREATE PROCEDURE eliminarCompra(
     IN c_id INT
 )
 BEGIN
@@ -349,9 +349,9 @@ BEGIN
     DECLARE v_item_monto DECIMAL(10,2);
     DECLARE v_item_proyectorubro_id INT;
     
-    SET total_items = (SELECT COUNT(*) FROM CompraProyectoRubro WHERE compra_id = c_id);
+    SET v_total_items = (SELECT COUNT(*) FROM CompraProyectoRubro WHERE compra_id = c_id);
     
-    WHILE idx < total_items DO
+    WHILE v_idx < v_total_items DO
         SELECT proyectorubro_id, monto INTO v_item_proyectorubro_id, v_item_monto
         FROM CompraProyectoRubro WHERE compra_id = c_id LIMIT 1 OFFSET v_idx;
         
@@ -360,7 +360,7 @@ BEGIN
         SET monto_disponible = monto_disponible + v_item_monto
         WHERE id = v_item_proyectorubro_id;
         
-        SET idx = idx + 1;
+        SET v_idx = v_idx + 1;
     END WHILE;
 
     UPDATE Compra
