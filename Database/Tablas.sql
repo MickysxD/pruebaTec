@@ -41,7 +41,7 @@ CREATE TABLE IF NOT EXISTS Donacion (
     fecha DATE NOT NULL DEFAULT (CAST(CURRENT_TIMESTAMP AS DATE)),
     proyectorubro_id INT NOT NULL,
     estado TINYINT NOT NULL DEFAULT 1,
-    FOREIGN KEY (proyectorubro_id) REFERENCES Rubro(id) ON DELETE CASCADE
+    FOREIGN KEY (proyectorubro_id) REFERENCES ProyectoRubro(id) ON DELETE CASCADE
 );
 
 -- Tabla de Órdenes de Compra

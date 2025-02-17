@@ -1,9 +1,9 @@
-const proyectoQuerys = require('../dbquerys/proyectoQuerys')
+const donacionQuerys = require('../dbquerys/donacionQuerys')
 
 const controllers = {}
 
 controllers.crearDonacion = async function crearDonacion(req, res) {
-    await proyectoQuerys.querys.crearDonacion(req.body)
+    await donacionQuerys.querys.crearDonacion(req.body)
         .then(response => {
             res.status(200).json(response);
         }).catch(error => {
@@ -12,7 +12,7 @@ controllers.crearDonacion = async function crearDonacion(req, res) {
 }
 
 controllers.obtenerDonaciones = async function obtenerDonaciones(req, res) {
-    await proyectoQuerys.querys.obtenerDonaciones(req.body)
+    await donacionQuerys.querys.obtenerDonaciones()
         .then(response => {
             res.status(200).json(response);
         }).catch(error => {
@@ -21,7 +21,7 @@ controllers.obtenerDonaciones = async function obtenerDonaciones(req, res) {
 }
 
 controllers.actualizarDonacion = async function actualizarDonacion(req, res) {
-    await proyectoQuerys.querys.actualizarDonacion(req.body)
+    await donacionQuerys.querys.actualizarDonacion(req.body)
         .then(response => {
             res.status(200).json(response);
         }).catch(error => {
@@ -30,7 +30,7 @@ controllers.actualizarDonacion = async function actualizarDonacion(req, res) {
 }
 
 controllers.eliminarDonacion = async function eliminarDonacion(req, res) {
-    await proyectoQuerys.querys.eliminarDonacion(req.body)
+    await donacionQuerys.querys.eliminarDonacion(req.body)
         .then(response => {
             res.status(200).json(response);
         }).catch(error => {

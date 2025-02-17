@@ -1,0 +1,8 @@
+:host::ng-deep .size .ngx-dropdown-button {
+    height: 58px;
+}
+
+:host::ng-deep .size.is-invalid .ngx-dropdown-button {
+    height: 58px;
+    border-color: var(--bs-form-invalid-border-color) !important;
+}

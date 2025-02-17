@@ -1,0 +1,182 @@
+<!-- style="max-height: 100%;" -->
+<div class="container-xl text-center w-100 h-100">
+    <div class="row pt-3">
+        <div class="col">
+            <h1>Proyectos</h1>
+        </div>
+    </div>
+
+    <div class="row pb-3">
+        <div class="col text-start">
+            <h2 class="my-auto">Tabla de proyectos</h2>
+        </div>
+        <div class="col text-end">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#proyectoModal"
+                (click)="accionProyecto(0)">
+                Crear proyecto
+            </button>
+        </div>
+    </div>
+
+    <div id="row mt-1 mb-1">
+        <div class="col">
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col" *ngFor="let titulo of titulos">{{titulo}}</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr class="table-active" *ngIf="proyectos.length === 0">
+                        <td colspan="7" scope="col">SIN INFORMACION</td>
+                    </tr>
+                    <tr class="table-active" *ngFor="let proyecto of proyectos">
+                        <td scope="col">{{proyecto.codigo}}</td>
+                        <td scope="col">{{proyecto.nombre}}</td>
+                        <td scope="col">{{proyecto.municipio}}</td>
+                        <td scope="col">{{proyecto.departamento}}</td>
+                        <!-- <td scope="col">{{proyecto.fecha_inicio}}</td>
+                        <td scope="col">{{proyecto.fecha_fin}}</td> -->
+                        <td scope="col">
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic outlined">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#proyectoModal"
+                                    (click)="accionProyecto(1, proyecto)">Editar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                    data-bs-target="#proyectoModal"
+                                    (click)="accionProyecto(3, proyecto)">Detalles</button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#proyectoModal"
+                                    (click)="accionProyecto(2, proyecto)">Eliminar</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="proyectoModal" tabindex="-1" aria-labelledby="proyectoModal" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 m-0" id="titleProyectoModal">Proyecto</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!--  was-validated -->
+                <form [formGroup]="proyectoForm" class="form form-vertical" *ngIf="proyectoForm">
+                    <div class="form-floating mb-1" *ngIf="tipo !== 0">
+                        <input class="form-control" type="text" formControlName="inputCodigo" id="inputCodigo"
+                            placeholder="P-0001">
+                        <label for="inputCodigo">Codigo de proyecto</label>
+                    </div>
+                    <div class="form-floating mb-1">
+                        <input class="form-control" type="text" formControlName="inputNombre" id="inputNombre"
+                            placeholder="Proyecto contra el cancer"
+                            [ngClass]="{'is-invalid': proyectoForm.get('inputNombre')?.errors?.['required'] && (proyectoForm.get('inputNombre')?.dirty || proyectoForm.get('inputNombre')?.touched)}">
+                        <label for="inputNombre">Nombre del proyecto</label>
+                        <div id="validationServerUsernameFeedback" class="invalid-feedback"
+                            *ngIf="proyectoForm.get('inputNombre')?.errors?.['required'] && (proyectoForm.get('inputNombre')?.dirty || proyectoForm.get('inputNombre')?.touched)">
+                            Ingresar nombre unico.
+                        </div>
+                    </div>
+                    <div class="form-floating mb-1">
+                        <input class="form-control" type="text" formControlName="inputMunicipio" id="inputMunicipio"
+                            placeholder="Guatemala"
+                            [ngClass]="{'is-invalid': proyectoForm.get('inputMunicipio')?.errors?.['required'] && (proyectoForm.get('inputMunicipio')?.dirty || proyectoForm.get('inputMunicipio')?.touched)}">
+                        <label for="inputMunicipio">Municipio</label>
+                        <div id="validationServerUsernameFeedback" class="invalid-feedback"
+                            *ngIf="proyectoForm.get('inputMunicipio')?.errors?.['required'] && (proyectoForm.get('inputMunicipio')?.dirty || proyectoForm.get('inputMunicipio')?.touched)">
+                            Ingresar municipio.
+                        </div>
+                    </div>
+                    <div class="form-floating mb-1">
+                        <input class="form-control" type="text" formControlName="inputDepartamento"
+                            id="inputDepartamento" placeholder="Mixco"
+                            [ngClass]="{'is-invalid': proyectoForm.get('inputDepartamento')?.errors?.['required'] && (proyectoForm.get('inputDepartamento')?.dirty || proyectoForm.get('inputDepartamento')?.touched)}">
+                        <label for="inputDepartamento">Departamento</label>
+                        <div id="validationServerUsernameFeedback" class="invalid-feedback"
+                            *ngIf="proyectoForm.get('inputDepartamento')?.errors?.['required'] && (proyectoForm.get('inputDepartamento')?.dirty || proyectoForm.get('inputDepartamento')?.touched)">
+                            Ingresar departamento.
+                        </div>
+                    </div>
+                    <div class="form-floating mb-1">
+                        <input class="form-control" type="date" formControlName="inputFechaInicial"
+                            id="inputFechaInicial" placeholder="01/01/2025"
+                            [ngClass]="{'is-invalid': proyectoForm.get('inputFechaInicial')?.errors?.['required'] && (proyectoForm.get('inputFechaInicial')?.dirty || proyectoForm.get('inputFechaInicial')?.touched)}">
+                        <label for="inputFechaInicial">Fecha Inicial</label>
+                        <div id="validationServerUsernameFeedback" class="invalid-feedback"
+                            *ngIf="proyectoForm.get('inputFechaInicial')?.errors?.['required'] && (proyectoForm.get('inputFechaInicial')?.dirty || proyectoForm.get('inputFechaInicial')?.touched)">
+                            Ingresar fecha inicial.
+                        </div>
+                    </div>
+                    <div class="form-floating mb-1">
+                        <input class="form-control" type="date" formControlName="inputFechaFinal" id="inputFechaFinal"
+                            placeholder="01/01/2026"
+                            [ngClass]="{'is-invalid': proyectoForm.get('inputFechaFinal')?.errors?.['required'] && (proyectoForm.get('inputFechaFinal')?.dirty || proyectoForm.get('inputFechaFinal')?.touched)}">
+                        <label for="inputFechaFinal">Fecha Final</label>
+                        <div id="validationServerUsernameFeedback" class="invalid-feedback"
+                            *ngIf="proyectoForm.get('inputFechaFinal')?.errors?.['required'] && (proyectoForm.get('inputFechaFinal')?.dirty || proyectoForm.get('inputFechaFinal')?.touched)">
+                            Ingresar fecha final.
+                        </div>
+                    </div>
+                    <div class="form-floating mb-1" *ngIf="tipo > 1">
+                        <input class="form-control" type="text" formControlName="inputDisponible" id="inputDisponible"
+                            placeholder="0.00">
+                        <label for="inputDisponible">Disponible</label>
+                    </div>
+                    <div class="form-floating mb-1" *ngIf="tipo > 1">
+                        <input class="form-control" type="text" formControlName="inputTotalPor" id="inputTotalPor"
+                            placeholder="0.00">
+                        <label for="inputTotalPor">Porcentaje ejecutado</label>
+                    </div>
+                    <div class="form-floating mb-1" *ngIf="tipo > 1">
+                        <input class="form-control" type="text" formControlName="inputTotal" id="inputTotal"
+                            placeholder="0.00">
+                        <label for="inputTotal">Total</label>
+                    </div>
+                    <div class="form-floating mb-1" *ngIf="tipo !== 0">
+                        <input class="form-control" type="text" formControlName="inputRubrosstr" id="inputRubrosstr"
+                            placeholder="Comida">
+                        <label for="inputRubrosstr">Rubros</label>
+                    </div>
+                    <div class="mb-1"  *ngIf="tipo === 0">
+                        <!-- <label for="inputRubros" class="form-label">Rubros</label> -->
+
+                        <ngx-select-dropdown id="inputRubros" class="size" [(ngModel)]="rubro"
+                            [ngModelOptions]="{standalone: true}" (change)="selectionChanged($event)" [options]="rubros"
+                            [multiple]="true" [config]="config"
+                            [ngClass]="{'is-invalid': proyectoForm.get('inputRubros')?.errors?.['required'] && (proyectoForm.get('inputRubros')?.dirty || proyectoForm.get('inputRubros')?.touched)}"
+                            [disabled]="tipo !== 0 && tipo !== 3">
+                        </ngx-select-dropdown>
+
+                        <select class="form-select visually-hidden" id="inputRubros" multiple
+                            [ngClass]="{'is-invalid': proyectoForm.get('inputRubros')?.errors?.['required'] && (proyectoForm.get('inputRubros')?.dirty || proyectoForm.get('inputRubros')?.touched)}">
+                            <option selected disabled value="">Choose...</option>
+                            <option selected value=""></option>
+                        </select>
+
+                        <div id="inputRubros" class="invalid-feedback"
+                            *ngIf="proyectoForm.get('inputRubros')?.errors?.['required'] && (proyectoForm.get('inputRubros')?.dirty || proyectoForm.get('inputRubros')?.touched)">
+                            Seleccionar rubro.
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3 d-flex justify-content-center" *ngIf="tipo !== 3">
+                        <button type="button" class="btn btn-success w-100"
+                            (click)="!proyectoForm.valid && !proyectoForm.disabled ? proyectoForm.markAllAsTouched() : accionModal(tipo)"
+                            [ngClass]="{'btn-success': tipo===0, 'btn-primary': tipo===1, 'btn-danger': tipo===2}"
+                            type="submit">{{accion}}</button>
+                    </div>
+                </form>
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div> -->
+        </div>
+    </div>
+</div>

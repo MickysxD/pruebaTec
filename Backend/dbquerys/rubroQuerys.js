@@ -14,6 +14,14 @@ querys.crearRubro = async function crearRubro(data) {
                 }
                 resolve(response);
             }).catch(err => {
+                if (err.sqlMessage === 'Nombre de rubro ya existe') {
+                    let response = {
+                        message: err.sqlMessage,
+                        show: false,
+                        status: 400,
+                    }
+                    resolve(response);
+                }
                 reject(err);
             });
     });
@@ -22,6 +30,23 @@ querys.crearRubro = async function crearRubro(data) {
 querys.obtenerRubros = async function obtenerRubros() {
     return new Promise(async (resolve, reject) => {
         await db.ejecutarQuery(`CALL obtenerRubros();`)
+            .then(res => {
+                let response = {
+                    message: 'Consulta exitosa',
+                    show: false,
+                    status: 200,
+                    data: res[0]
+                }
+                resolve(response);
+            }).catch(err => {
+                reject(err);
+            });
+    });
+}
+
+querys.obtenerRubrosProyecto = async function obtenerRubrosProyecto(data) {
+    return new Promise(async (resolve, reject) => {
+        await db.ejecutarQuery(`CALL obtenerRubrosProyecto(${data.id});`)
             .then(res => {
                 let response = {
                     message: 'Consulta exitosa',
@@ -48,6 +73,14 @@ querys.actualizarRubro = async function actualizarRubro(data) {
                 }
                 resolve(response);
             }).catch(err => {
+                if (err.sqlMessage === 'Nombre de rubro ya existe') {
+                    let response = {
+                        message: err.sqlMessage,
+                        show: false,
+                        status: 400,
+                    }
+                    resolve(response);
+                }
                 reject(err);
             });
     });

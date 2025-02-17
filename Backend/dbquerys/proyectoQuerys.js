@@ -4,7 +4,7 @@ const querys = {};
 
 querys.crearProyecto = async function crearProyecto(data) {
     return new Promise(async (resolve, reject) => {
-        await db.ejecutarQuery(`CALL crearProyecto('${data.nombre}','${data.municipio}','${data.departamento}','${data.fecha_inicio}','${data.fecha_fin}','${data.rubros}');`)
+        await db.ejecutarQuery(`CALL crearProyecto('${data.nombre}','${data.municipio}','${data.departamento}','${data.fecha_inicio}','${data.fecha_fin}','${JSON.stringify(data.rubros)}');`)
             .then(res => {
                 let response = {
                     message: 'Consulta exitosa',
@@ -14,6 +14,14 @@ querys.crearProyecto = async function crearProyecto(data) {
                 }
                 resolve(response);
             }).catch(err => {
+                if (err.sqlMessage !== '') {
+                    let response = {
+                        message: err.sqlMessage,
+                        show: false,
+                        status: 400,
+                    }
+                    resolve(response);
+                }
                 reject(err);
             });
     });

@@ -1,0 +1,93 @@
+<!-- style="max-height: 100%;" -->
+<div class="container-xl text-center w-100 h-100">
+    <div class="row pt-3">
+        <div class="col">
+            <h1>Rubros</h1>
+        </div>
+    </div>
+
+    <div class="row pb-3">
+        <div class="col text-start">
+            <h2 class="my-auto">Tabla de rubros</h2>
+        </div>
+        <div class="col text-end">
+            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#rubroModal"
+                (click)="accionRubro(0)">
+                Crear rubro
+            </button>
+        </div>
+    </div>
+
+    <div id="row mt-1 mb-1">
+        <div class="col">
+            <table class="table table-striped table-hover table-bordered">
+                <thead>
+                    <tr>
+                        <th scope="col" *ngFor="let titulo of titulos">{{titulo}}</th>
+                    </tr>
+                </thead>
+                <tbody class="table-group-divider">
+                    <tr class="table-active" *ngIf="rubros.length === 0">
+                        <td colspan="3" scope="col">SIN INFORMACION</td>
+                    </tr>
+                    <tr class="table-active" *ngFor="let rubro of rubros">
+                        <td scope="col">{{rubro.id}}</td>
+                        <td scope="col">{{rubro.nombre}}</td>
+                        <td scope="col">
+                            <div class="btn-group btn-group-sm" role="group" aria-label="Basic outlined">
+                                <button type="button" class="btn btn-primary" data-bs-toggle="modal"
+                                    data-bs-target="#rubroModal" (click)="accionRubro(1, rubro)">Editar</button>
+                                <button type="button" class="btn btn-secondary" data-bs-toggle="modal"
+                                    data-bs-target="#rubroModal" (click)="accionRubro(3, rubro)">Detalles</button>
+                                <button type="button" class="btn btn-danger" data-bs-toggle="modal"
+                                    data-bs-target="#rubroModal" (click)="accionRubro(2, rubro)">Eliminar</button>
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal -->
+<div class="modal fade" id="rubroModal" tabindex="-1" aria-labelledby="rubroModal" aria-hidden="true"
+    data-bs-backdrop="static" data-bs-keyboard="false">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h1 class="modal-title fs-5 m-0" id="titleRubroModal">{{accion}} rubro</h1>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form [formGroup]="rubroForm" class="form form-vertical" *ngIf="rubroForm">
+                    <div class="form-floating mb-1" *ngIf="tipo !== 0">
+                        <input class="form-control" type="text" formControlName="inputId" id="inputId" placeholder="1">
+                        <label for="inputId">Codigo de rubro</label>
+                    </div>
+                    <div class="form-floating mb-1">
+                        <input class="form-control" type="text" formControlName="inputNombre" id="inputNombre"
+                            placeholder="Insumos"
+                            [ngClass]="{'is-invalid': rubroForm.get('inputNombre')?.errors?.['required'] && (rubroForm.get('inputNombre')?.dirty || rubroForm.get('inputNombre')?.touched)}">
+                        <label for="inputNombre">Nombre del rubro</label>
+                        <div id="validationServerUsernameFeedback" class="invalid-feedback"
+                            *ngIf="rubroForm.get('inputNombre')?.errors?.['required'] && (rubroForm.get('inputNombre')?.dirty || rubroForm.get('inputNombre')?.touched)">
+                            Ingresar nombre unico.
+                        </div>
+                    </div>
+                    <div class="col-12 mt-3 d-flex justify-content-center" *ngIf="tipo !== 3">
+                        <button type="button" class="btn w-100"
+                            (click)="!rubroForm.valid && !rubroForm.disabled ? rubroForm.markAllAsTouched() : accionModal(tipo)"
+                            type="submit"
+                            [ngClass]="{'btn-success': tipo===0, 'btn-primary': tipo===1, 'btn-danger': tipo===2}">
+                            {{accion}}</button>
+                    </div>
+                </form>
+            </div>
+            <!-- <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+            </div> -->
+        </div>
+    </div>
+</div>
